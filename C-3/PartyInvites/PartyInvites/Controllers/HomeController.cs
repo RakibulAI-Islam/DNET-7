@@ -6,17 +6,37 @@ namespace PartyInvites.Controllers
 {
     public class HomeController : Controller
     {
-        /*private readonly ILogger<HomeController> _logger;*/
+        
         public IActionResult Index()
         {
             return View();
         }
-            /*_logger = logger;*/
         
 
+
+        [HttpGet]
         public ViewResult RsvpForm()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ViewResult RsvpForm(GuestResponse guestResponse)
+        {
+            if (ModelState.IsValid)
+            {
+                Repository.AddResponse(guestResponse);
+                return View("Thanks", guestResponse);
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public ViewResult ListResponses()
+        {
+             return View(Repository.Responses.Where(r => r.WillAttend == true));
         }
     }
 }
